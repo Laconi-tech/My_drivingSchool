@@ -1,0 +1,87 @@
+{% load customtags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>Retourner sur la <a href="{% url 'index' %}">Homepage</a></p>
+    <h1>Liste des rendez-vous</h1>
+
+    <!-- views secratary -->
+    {% if user|has_group:"secretary" %}
+    <ul>
+        {% for rdv, form in rdv_forms %}
+        <li>
+            <form method="post">
+                {% csrf_token %}
+                <p> Titre: {{ rdv.title }}</p>
+                <ul>
+                    {% for member in rdv.rdv_member.all %}
+                        <li>{{ member.username }}</li>
+                    {% endfor %}
+                </ul>
+                <p>Date & heure: {{ rdv.rdv_date }}</p>
+                <input type="hidden" name="id" value="{{ rdv.id }}">
+                {{ form.title }}
+                {{ form.rdv_date }}
+                <button type="submit">Modifier</button>
+                <button type="submit" name="delete" value="delete">Supprimer</button>
+            </form>
+        </li>
+        <hr>
+        <br>
+        {% endfor %}
+    </ul>
+
+    {% elif user|has_group:"instructor" %}
+    <ul>
+        {% for rdv, form in rdv_forms %}
+            {% if user in rdv.rdv_member.all %}
+                <li>
+                    <form method="post">
+                        {% csrf_token %}
+                        <p>Titre: {{ rdv.title }}</p>
+                        <p>Date & heure: {{ rdv.rdv_date }}</p>
+                        <ul>
+                            {% for member in rdv.rdv_member.all %}
+                                <li><a href="{% url 'show' member.username %}">{{member.username}}</a></li>
+                            {% endfor %}
+                        </ul>
+                        <input type="hidden" name="id" value="{{ rdv.id }}">
+                        {{ form.title }}
+                        {{ form.rdv_date }}
+                        <button type="submit">Modifier</button>
+                        <button type="submit" name="delete" value="delete">Supprimer</button>
+                    </form>
+                </li>
+                <hr>
+                <br>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+    {% elif user|has_group:"student" %}
+    <ul>
+        {% for rdv, form in rdv_forms %}
+            {% if user in rdv.rdv_member.all %}
+            <li><p> titre: {{ rdv.title }}</p>
+                <ul>
+                    {% for member in rdv.rdv_member.all %}
+                        <li>{{ member.username }}</li>
+                    {% endfor %}
+                </ul>
+                <p>date & heure: {{ rdv.rdv_date }}</p>
+            </li>    
+                <hr>
+                <br>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+
+</body>
+</html>

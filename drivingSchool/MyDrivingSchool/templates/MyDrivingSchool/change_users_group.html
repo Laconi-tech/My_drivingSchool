@@ -1,0 +1,33 @@
+{% load customtags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+
+
+    <div class="container">
+        <h1>Changer le groupe d'un utilisateur</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ group_form.as_p }}
+            <button type="submit" name="change_group" class="btn btn-primary">Changer de groupe</button>
+        </form>
+        
+        <hr>
+        
+        <h1>Créer un nouvel utilisateur</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ user_form.as_p }}
+            <button type="submit" name="create_user" class="btn btn-success">Créer utilisateur</button>
+        </form>
+    </div>
+
+    <p>Retourner sur la <a href="{% url 'index' %}">Homepage</a></p>
+</body>
+</html>

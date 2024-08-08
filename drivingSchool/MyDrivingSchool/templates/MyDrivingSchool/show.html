@@ -1,0 +1,48 @@
+{% load customtags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.username }}</title>
+</head>
+<body>
+    <p>Profile de {{ user_show.username }}</p>
+
+    <p>Retourner sur la <a href="{% url 'index' %}">Homepage</a></p>
+
+    {% if user|has_group:"secretary" %}
+    <form method="post">
+        {% csrf_token %}
+        {{ update_form.as_p }}
+        <button type="submit" name="update">Modifier</button>
+    </form>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ delete_form.as_p }}
+        <button type="submit" name="delete">Supprimer</button>
+    </form>
+    {% endif %}
+
+    <h1>liste des rdv de {{ user_show }}:</h1>
+    <ul>
+        {% for rdv, form in rdv_forms %}
+
+                <li>
+                    <p>Titre: {{ rdv.title }}</p>
+                    <p>Date & heure: {{ rdv.rdv_date }}</p>
+                    <ul>
+                        {% for member in rdv.rdv_member.all %}
+                            <li>{{ member.username }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            <hr>
+            <br>
+           
+        {% endfor %}
+
+
+</body>
+</html>

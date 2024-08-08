@@ -1,0 +1,25 @@
+{% load customtags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>ajouter des rdv au planning</h1>
+    {% if user|has_group:"secretary" %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add rdv</button>
+    </form>
+    {% elif user|has_group:"instructor" %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form_instructor.as_p }}
+        <button type="submit">Add rdv</button>
+    </form>
+    {% endif %}
+</body>
+</html>

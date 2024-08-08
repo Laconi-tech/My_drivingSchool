@@ -1,0 +1,43 @@
+{% load static %}
+{% load customtags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomePage</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+
+    {% if user.is_authenticated %}
+        <p>Connecté en tant que {{ user.username }} | <a href="{% url 'accounts:logout' %}">Déconnexion</a> | <a href="{% url 'show' user.username%}">Mon Compte</a></p>
+    {% else %}
+        <p><a href="{% url 'accounts:login' %}"> Connexion</a> | <a href="{% url 'accounts:register' %}"> Inscription</a></p>
+    {% endif %}
+
+    {% if user|has_group:"secretary" %}
+    <h2>All users:</h2>
+    <ul>
+        {% for user in users %}
+        <li> <a href="{% url 'show' user.username %}">{{user.username}}</a> </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if user|has_group:"secretary" or user|has_group:"instructor" %}
+    <a href="{% url 'add_planning' %}">ajouter 2 utilisateurs pour heure de conduite</a>
+    <br>
+    {% endif %}
+    {% if user|has_group:"secretary" %}
+    <a href="{% url 'group' %}">gestion utilisateurs</a>
+    <br>
+    {% endif %}
+
+    <a href="{% url 'planning' %}">voir le planning</a>
+
+    {% if perms.MyDrivingSchool.delete_planning %}
+        <p>La permission de delete des planning est présente</p>
+    {% endif %}
+</body>
+</html>
